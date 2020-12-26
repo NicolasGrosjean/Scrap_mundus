@@ -1,4 +1,4 @@
-# Scrap the statistics about RGS AARs
+# Scrap Mundus Bellicus website to have insights
 
 ## Installation
 Install [Miniconda](https://conda.io/miniconda.html).
@@ -7,6 +7,7 @@ Create a conda environment with the following command.
 
 ````
 conda env create --file environment.yml
+pip install plotly
 ````
 
 ## Activate the environment to run code

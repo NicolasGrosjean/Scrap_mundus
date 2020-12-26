@@ -7,8 +7,8 @@ GAMES = ['Ancient Cities', 'Ancient Worlds : Egypt', 'Builders of China', 'Build
          'Crusader Kings III', 'Empire : Total War', 'Europa Universalis IV', 'Fields of History: The Great War',
          'Hearts of Iron', 'Hegemony III', 'Hellish quart', 'Humankind', 'Imperator : Rome', 'Knights of Honor 2',
          'La Porte des Fauconniers', 'Medieval II - Total War', 'Mount & Blade II', 'Nebuchadnezzar',
-         'Pharaoh : A New Era', 'Rome : Total War', 'Stellaris', 'Sumerians', 'Supermarket Manager', 'Three Kingdoms',
-         'Total War : Warhammer', 'Troy : Total War']
+         'Pharaoh : A New Era', 'Rome : Total War', 'Stadium Renovator', 'Stellaris', 'Sumerians',
+         'Supermarket Manager', 'Three Kingdoms', 'Total War : Warhammer', 'Troy : Total War']
 
 GAME_MAPPING = {'Crusader Kings III': 'Crusader Kings 3', 'Hearts of Iron': 'Hearts of Iron IV',
                 'Mount & Blade II': 'Mount & Blade II : Bannerlord', 'Three Kingdoms': 'Total War : Three Kingdoms',
@@ -36,12 +36,39 @@ def extract_game(title: str):
     return ''
 
 
+def add_game_category(game: str):
+    if pd.isnull(game):
+        return None
+    if game in ['Ancient Cities', 'Ancient Worlds : Egypt', 'Builders of China', 'Builders of Egypt',
+                'Nebuchadnezzar', 'Pharaoh : A New Era', 'Stadium Renovator', 'Sumerians', 'Supermarket Manager']:
+        return 'Gestion'
+    if game in ['Crusader Kings 3', 'Europa Universalis IV', 'Fields of History: The Great War', 'Hearts of Iron IV',
+                'Imperator : Rome', 'Stellaris']:
+        return 'Grande Stratégie'
+    if game in ['Hellish quart', 'La Porte des Fauconniers', 'Mount & Blade II : Bannerlord']:
+        return 'RPG'
+    if game in ['Humankind']:
+        return '4X'
+    if game in ['Hegemony III', 'Knights of Honor 2']:
+        return 'STR'
+    if 'Total' in game:
+        return 'Total War'
+    return None
+
+
 def main(args):
     relative_json_path = args.json
     json_path = os.path.join(get_data_dir(), relative_json_path)
     print(f'Read the file {json_path}')
-    data = pd.read_json(json_path, encoding='utf-8')
-    data['game'] = data['title'].apply(extract_game)
+    data = pd.read_json(json_path, encoding='utf-8', keep_default_dates=False)
+    data['date'] = pd.to_datetime(data['date'], dayfirst=True)
+    if os.path.exists(os.path.join(get_data_dir(), 'url_to_game.csv')):
+        df = pd.read_csv(os.path.join(get_data_dir(), 'url_to_game.csv'), encoding='ISO-8859-1')
+        url_to_game = df[['url', 'game']].set_index('url').to_dict()['game']
+        data['game'] = data['url'].apply(lambda url: url_to_game[url] if url in url_to_game else None)
+    else:
+        data['game'] = data['title'].apply(extract_game)
+    data['game_type'] = data['game'].apply(add_game_category)
     data.to_csv(f'{json_path[:-5]}.csv', index=None)
     print(f'{json_path[:-5]}.csv written')
 
