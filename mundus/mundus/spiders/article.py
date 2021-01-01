@@ -26,7 +26,10 @@ class MundusArticleSpider(scrapy.Spider):
         for i in range(len(meta)):
             author = meta[i].xpath('.//li//a//text()').extract_first()
             date = get_date(meta[i].xpath('.//li')[1].xpath('.//text()').extract_first())
-            views = get_view_nb(meta[i].xpath('.//li')[2].xpath('.//text()').extract_first())
+            try:
+                views = get_view_nb(meta[i].xpath('.//li')[2].xpath('.//text()').extract_first())
+            except IndexError:
+                views = None
             yield {'title' : titles[i], 'url' : urls[i], 'author': author, 'date': date, 'views': views}
 
         if self.page_nb < MAX_PAGE:
