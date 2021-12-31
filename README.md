@@ -1,14 +1,26 @@
 # Scrap Mundus Bellicus website to have insights
 
 ## Installation
+
+The running environment can be installed by several ways.
+
+### With Miniconda
+
 Install [Miniconda](https://conda.io/miniconda.html).
 
 Create a conda environment with the following command.
 
 ````
 conda env create --file environment.yml
-pip install plotly
 ````
+
+### With another install
+
+With an alreaday installed Python environment, install the required packages with the following command.
+
+```
+pip install requirements.txt
+```
 
 ## Activate the environment to run code
 ### Windows
@@ -39,5 +51,14 @@ Nota: You maybe need to update MAX_PAGE constant in
 Run the following script to convert the data into a CSV file.
 
 ```
-python json_to_csv.py mundus_aticle.json
+python json_to_csv.py mundus_article.json
+```
+
+## Run notebook to compute graphs
+
+Run the following commands.
+
+```
+cd notebook
+jupyter notebook
 ```
