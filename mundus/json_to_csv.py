@@ -3,17 +3,22 @@ import os
 import argparse
 
 
-GAMES = ['Ancient Cities', 'Ancient Worlds : Egypt', 'Builders of China', 'Builders of Egypt', 'Crusader Kings 3',
-         'Crusader Kings III', 'Empire : Total War', 'Europa Universalis IV', 'Fields of History: The Great War',
-         'Hearts of Iron', 'Hegemony III', 'Hellish quart', 'Humankind', 'Imperator : Rome', 'Knights of Honor 2',
-         'La Porte des Fauconniers', 'Medieval II - Total War', 'Medieval II : Total War', 'Mount & Blade II',
-         'Nebuchadnezzar', 'Pharaoh : A New Era', 'Rome : Total War', 'Stadium Renovator', 'Stellaris', 'Sumerians',
-         'Supermarket Manager', 'Three Kingdoms', 'Total War : Warhammer', 'Troy : Total War']
+GAMES = ['Age of Empires III : Definitive Edition', 'Age of Empires II', 'Age of Empires IV', 'Ancient Cities', 'Ancient Worlds : Egypt',
+         'Builder Simulator', 'Builders of China', 'Builders of Egypt',
+         'Chernobyl Liquidators Simulator', 'Chinese City Constructor ', 'Crusader Kings 3',
+         'Crusader Kings III', 'Decisive Campaigns : Ardennes Offensive', 'Distant Kingdoms',
+         'El Dorado: The Golden City Builder', 'Empire : Total War', 'Europa Universalis IV', 'Espresso Tycoon',
+         'Field of Glory II : Medieval', 'Fields of History: The Great War', 'Going Medieval',
+         'Hearts of Iron', 'HOI4', 'Hegemony III', 'Hellish Quart', 'Hellish quart', 'Humankind', 'Imperator : Rome', 'Knights of Honor 2',
+         'La Porte des Fauconniers', 'Medieval II - Total War', 'Medieval II : Total War', 'Monuments Flipper', 'Mount & Blade II',
+         'Nebuchadnezzar', 'Patron', 'Pharaoh : A New Era', 'Pizza Simulator', 'Project Wunderwaffe', 'Rome : Total War', 'Stadium Renovator', 'Stellaris', 'Sumerians',
+         'Supermarket Manager', 'The Troop', 'Three Kingdoms', 'Timberborn', 'Total War : Troy', 'Total War : Warhammer',
+         'Total War : WARHAMMER', 'Troy : Total War', 'Victoria 3', 'Victoria III ', 'Viking City Builder', 'Wargame Red Dragon']
 
-GAME_MAPPING = {'Crusader Kings III': 'Crusader Kings 3', 'Hearts of Iron': 'Hearts of Iron IV',
+GAME_MAPPING = {'Crusader Kings III': 'Crusader Kings 3', 'Hearts of Iron': 'Hearts of Iron IV', 'Hellish Quart': 'Hellish quart', 'HOI4': 'Hearts of Iron IV',
                 'Mount & Blade II': 'Mount & Blade II : Bannerlord', 'Three Kingdoms': 'Total War : Three Kingdoms',
-                'Total War : Warhammer': 'Total War : Warhammer II',
-                'Medieval II - Total War': 'Medieval II : Total War'}
+                'Total War : Warhammer': 'Total War : Warhammer II', 'Total War : WARHAMMER': 'Total War : Warhammer II',
+                'Medieval II - Total War': 'Medieval II : Total War', 'Total War : Troy': 'Troy : Total War', 'Victoria III': 'Victoria 3'}
 
 def get_args():
     parser = argparse.ArgumentParser(description='Convert JSON result to CSV and try inferring games')
@@ -40,20 +45,25 @@ def extract_game(title: str):
 def add_game_category(game: str):
     if pd.isnull(game):
         return None
-    if game in ['Ancient Cities', 'Ancient Worlds : Egypt', 'Builders of China', 'Builders of Egypt',
-                'Nebuchadnezzar', 'Pharaoh : A New Era', 'Stadium Renovator', 'Sumerians', 'Supermarket Manager']:
+    if game in ['Ancient Cities', 'Ancient Worlds : Egypt', 'Builder Simulator',
+                'Builders of China', 'Builders of Egypt', 'Chernobyl Liquidators Simulator', 'Chinese City Constructor ', 'Distant Kingdoms',
+                'El Dorado: The Golden City Builder', 'Espresso Tycoon', 'Going Medieval',
+                'Monuments Flipper', 'Nebuchadnezzar', 'Patron', 'Pharaoh : A New Era', 'Pizza Simulator', 'Project Wunderwaffe',
+                'Stadium Renovator', 'Sumerians', 'Supermarket Manager', 'Timberborn', 'Viking City Builder']:
         return 'Gestion'
     if game in ['Crusader Kings 3', 'Europa Universalis IV', 'Fields of History: The Great War', 'Hearts of Iron IV',
-                'Imperator : Rome', 'Stellaris']:
+                'Imperator : Rome', 'Stellaris', 'Victoria 3']:
         return 'Grande Stratégie'
     if game in ['Hellish quart', 'La Porte des Fauconniers', 'Mount & Blade II : Bannerlord']:
         return 'RPG'
     if game in ['Humankind']:
         return '4X'
-    if game in ['Hegemony III', 'Knights of Honor 2']:
+    if game in ['Age of Empires II', 'Age of Empires III : Definitive Edition', 'Age of Empires IV', 'Hegemony III', 'Knights of Honor 2', 'Wargame Red Dragon']:
         return 'STR'
     if 'Total' in game:
         return 'Total War'
+    if game in ['Decisive Campaigns : Ardennes Offensive', 'Field of Glory II : Medieval', 'The Troop']:
+        return 'Stratégie Tour par Tour'
     return None
 
 
@@ -70,7 +80,7 @@ def main(args):
     else:
         data['game'] = data['title'].apply(extract_game)
     data['game_type'] = data['game'].apply(add_game_category)
-    data.to_csv(f'{json_path[:-5]}.csv', index=None)
+    data.to_csv(f'{json_path[:-5]}.csv', index=None, sep=';')
     print(f'{json_path[:-5]}.csv written')
 
 
