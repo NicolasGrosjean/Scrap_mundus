@@ -49,7 +49,7 @@ def main(args):
         res += game_type_to_bbcode(game_type.upper(), month_data[month_data['game_type'] == game_type])
     res += game_type_to_bbcode('DIVERS', month_data[~month_data['game_type'].isin(GAME_TYPES)])
     output_file = f'Diarium_Strategorum_{args.month}.txt'
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding='utf-8') as f:
         f.write(res)
     print(f'{output_file} written')
 
