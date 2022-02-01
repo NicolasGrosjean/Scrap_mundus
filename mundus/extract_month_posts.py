@@ -41,6 +41,8 @@ def main(args):
     csv_path = os.path.join(get_data_dir(), relative_csv_path)
     print(f'Read the file {csv_path}')
     data = pd.read_csv(csv_path, sep=';')
+    data['game'].fillna('', inplace=True)
+    data['game_type'].fillna('', inplace=True)
     month_data = data[data['date'] >= f'{args.month}-01']
     res = ''
     for game_type in GAME_TYPES:
