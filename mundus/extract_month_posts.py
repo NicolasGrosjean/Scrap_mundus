@@ -18,6 +18,8 @@ def game_type_to_bbcode(game_type: str, data: pd.DataFrame):
     """
     Export in a string the BBcode of the dataframe with games sorted alphabetically
     """
+    if len(data) == 0:
+        return ''
     res = f'[b]{game_type}[/b]\n'
     for game in sorted(data['game'].unique()):
         res += game_post_to_bbcode(game, data[data['game'] == game])
