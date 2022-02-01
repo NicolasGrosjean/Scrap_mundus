@@ -4,9 +4,10 @@ import pandas as pd
 
 import sys
 sys.path.append(os.path.dirname(__file__))
+from constants import GRANDE_STATEGIE, PARADOX_INTERACTIVE
 from utils import get_data_dir
 
-GAME_TYPES = ['Total War', 'Grande Stratégie', 'Gestion', 'STR']
+GAME_TYPES = ['Total War', 'Paradox Interactive', 'Gestion', 'Stratégie', 'Tactique Tour par Tour']
 
 def get_args():
     parser = argparse.ArgumentParser(description='Extract posts of a month to help to write the Diarium Strategorum.')
@@ -37,14 +38,27 @@ def game_post_to_bbcode(game: str, posts: pd.DataFrame):
     res += '[/list]\n\n'
     return res
 
+def adapt_game_type(data: pd.DataFrame):
+    """
+    Adapt the dataframe to the game type of the monthly export
+    """
+    res = data.copy()
+    res['game'].fillna('', inplace=True)
+    res['game_type'].fillna('', inplace=True)
+    res['game_type'].replace('STR', 'Stratégie', inplace=True)
+    res['game_type'].replace('4X', 'Stratégie', inplace=True)
+    res['game_type'].replace('Stratégie Tour par Tour', 'Tactique Tour par Tour', inplace=True)
+    res.loc[res['game'].isin(GRANDE_STATEGIE), 'game_type'] = 'Stratégie'
+    res.loc[res['game'].isin(PARADOX_INTERACTIVE), 'game_type'] = 'Paradox Interactive'
+    return res.loc[res['game'] != 'Diarium Strategorum']
+
 
 def main(args):
     relative_csv_path = args.csv
     csv_path = os.path.join(get_data_dir(), relative_csv_path)
     print(f'Read the file {csv_path}')
     data = pd.read_csv(csv_path, sep=';')
-    data['game'].fillna('', inplace=True)
-    data['game_type'].fillna('', inplace=True)
+    data = adapt_game_type(data)
     month_data = data[data['date'] >= f'{args.month}-01']
     res = ''
     for game_type in GAME_TYPES:
