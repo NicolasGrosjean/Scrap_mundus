@@ -16,7 +16,7 @@ conda env create --file environment.yml
 
 ### With another install
 
-With an alreaday installed Python environment, install the required packages with the following command.
+With an already installed Python environment, install the required packages with the following command.
 
 ```
 pip install requirements.txt

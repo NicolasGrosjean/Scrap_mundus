@@ -2,6 +2,10 @@ import argparse
 import os
 import pandas as pd
 
+import sys
+sys.path.append(os.path.dirname(__file__))
+from utils import get_data_dir
+
 GAME_TYPES = ['Total War', 'Grande Stratégie', 'Gestion', 'STR']
 
 def get_args():
@@ -9,11 +13,6 @@ def get_args():
     parser.add_argument('csv', type=str, help='Relative data path (.csv)')
     parser.add_argument('month', type=str, help='Month of the extraction in YYYY-MM format')
     return parser.parse_args()
-
-def get_data_dir():
-    if 'data' in os.listdir('.'):
-        return 'data'
-    return os.path.join('..', 'data')
 
 def game_type_to_bbcode(game_type: str, data: pd.DataFrame):
     """
