@@ -1,6 +1,6 @@
 import scrapy
 
-MAX_PAGE = 4
+MAX_PAGE = 5
 
 
 def get_date(elem: str):
