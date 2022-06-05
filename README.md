@@ -46,7 +46,7 @@ scrapy crawl mundus_article -o data/mundus_article.json
 Nota: You maybe need to update MAX_PAGE constant in 
 `mundus/mundus/spiders/article.py` to change the number of scraped pages.
 
-We need to replace manually the words *Aujourd'hui* and *Hier* by valid dates.
+We need to replace manually the words *Aujourd'hui* and *Hier* by valid dates (json_to_csv.py will do it with current date).
 
 ## Convert the data in CSV
 

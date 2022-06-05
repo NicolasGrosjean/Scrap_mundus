@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "json_to_csv",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/mundus/json_to_csv.py",
+            "args": [
+                "mundus_article.json"
+            ]
+        },
+        {
             "name": "extract_month_posts",
             "type": "python",
             "request": "launch",
