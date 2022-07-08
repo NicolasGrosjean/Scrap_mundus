@@ -59,7 +59,7 @@ def main(args):
     print(f'Read the file {csv_path}')
     data = pd.read_csv(csv_path, sep=';')
     data = adapt_game_type(data)
-    month_data = data[data['date'] >= f'{args.month}-01']
+    month_data = data[data['date'].apply(lambda date: str(date).startswith(args.month))]
     res = ''
     for game_type in GAME_TYPES:
         res += game_type_to_bbcode(game_type.upper(), month_data[month_data['game_type'] == game_type])
