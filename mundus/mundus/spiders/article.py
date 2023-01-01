@@ -1,5 +1,6 @@
 import scrapy
 
+# MAX_PAGE = 300
 MAX_PAGE = 5
 
 
